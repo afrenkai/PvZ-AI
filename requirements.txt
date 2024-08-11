@@ -1,0 +1,3 @@
+numpy
+pyscopg2
+python-dotenv
