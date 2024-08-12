@@ -2,6 +2,7 @@ import numpy as np
 import random
 from constants import *
 
+
 # Game class to manage the game state
 class Game:
     def __init__(self, world: int, lanes: int, cols: int, sun: int):

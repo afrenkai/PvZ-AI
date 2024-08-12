@@ -7,11 +7,23 @@ class GameOverException(Exception):
     pass
 
 
-def weighted_random_zombie_choice(zombies):
-    """ Select a zombie weighted by their health, favoring those with lower health. """
-    total_health = sum(zombie.hp for zombie in zombies.values())
-    weight_list = [(total_health - zombie.hp) / total_health for zombie in zombies.values()]
-    return random.choices(list(zombies.values()), weights=weight_list, k=1)[0]
+def _weighted_random_zombie_choice(self, zombies):
+    """Select a zombie weighted by their health, favoring those with lower health."""
+    total_health = sum(z.hp for z in zombies.values())
+    if total_health == 0:
+        # Handle the edge case where all zombies have zero health, which shouldn't typically happen
+        weights = [1.0 / len(zombies)] * len(zombies)
+    else:
+        weights = [(total_health - z.hp) / total_health for z in zombies.values()]
+
+    # Normalize weights to sum to 1
+    total_weight = sum(weights)
+    if total_weight > 0:
+        normalized_weights = [w / total_weight for w in weights]
+    else:
+        normalized_weights = [1.0 / len(zombies)] * len(zombies)
+
+    return np.random.choice(list(zombies.values()), p=normalized_weights)
 
 
 def spawn_random_sun(game):
